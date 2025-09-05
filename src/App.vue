@@ -4,16 +4,18 @@ import BHeader from './components/BHeader.vue'
 import LibraryRegistrationForm from './components/LibraryRegistrationForm.vue'
 </script>
 
+
 <template>
   <header>
     <BHeader />
   </header>
 
-  <main>
-    <LibraryRegistrationForm />
-    <!-- <JSONLab /> -->
+  <main class="container mt-4">
+    <router-view />
   </main>
 </template>
+
+
 
 <style scoped>
 /* header {
