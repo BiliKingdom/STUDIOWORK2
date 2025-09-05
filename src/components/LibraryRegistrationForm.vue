@@ -6,6 +6,7 @@ import Column from 'primevue/column'
 const formData = ref({
   username: '',
   password: '',
+  confirmPassword: '', 
   isAustralian: false,
   reason: '',
   gender: ''
@@ -35,6 +36,7 @@ const clearForm = () => {
 const errors = ref({
   username: null,
   password: null,
+  confirmPassword: null,
   resident: null,
   gender: null,
   reason: null
@@ -47,6 +49,15 @@ const validateName = (blur) => {
     errors.value.username = null
   }
 }
+
+const validateConfirmPassword = (blur) => {
+  if (formData.value.password !== formData.value.confirmPassword) {
+    if (blur) errors.value.confirmPassword = 'Passwords do not match.'
+  } else {
+    errors.value.confirmPassword = null
+  }
+}
+
 
 const validatePassword = (blur) => {
   const password = formData.value.password
@@ -110,6 +121,25 @@ const validatePassword = (blur) => {
               <div v-if="errors.password" class="text-danger">{{ errors.password }}</div>
             </div>
           </div>
+
+          <div class="row mb-3">
+            <!-- Confirm Password -->
+            <div class="col-md-6 col-sm-6">
+              <label for="confirm-password" class="form-label">Confirm password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="confirm-password"
+                v-model="formData.confirmPassword"
+                @blur="() => validateConfirmPassword(true)"
+              />
+              <div v-if="errors.confirmPassword" class="text-danger">
+                {{ errors.confirmPassword }}
+              </div>
+            </div>
+          </div>
+
+
           <div class="row mb-3">
             <div class="col-md-6 col-sm-6">
               <div class="form-check">
