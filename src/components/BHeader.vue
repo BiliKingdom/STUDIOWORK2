@@ -1,6 +1,3 @@
-<template>
-  <!-- Using Bootstrap's Header template (starter code) -->
-  <!-- https://getbootstrap.com/docs/5.0/examples/headers/ -->
 <script setup>
 import { useAuth } from '../composables/useAuth'
 import { useRouter } from 'vue-router'
@@ -14,6 +11,9 @@ const handleLogout = () => {
 }
 </script>
 
+<template>
+  <!-- Using Bootstrap's Header template (starter code) -->
+  <!-- https://getbootstrap.com/docs/5.0/examples/headers/ -->
   <div class="container">
     <header class="d-flex justify-content-center py-3">
       <ul class="nav nav-pills">
@@ -67,7 +67,6 @@ const handleLogout = () => {
   background-color: var(--bs-nav-pills-link-active-bg);
 }
 
-<style scoped>
 .b-example-divider {
   height: 3rem;
   background-color: rgba(0, 0, 0, 0.1);
