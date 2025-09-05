@@ -1,6 +1,18 @@
 <template>
   <!-- Using Bootstrap's Header template (starter code) -->
   <!-- https://getbootstrap.com/docs/5.0/examples/headers/ -->
+<script setup>
+import { useAuth } from '../composables/useAuth'
+import { useRouter } from 'vue-router'
+
+const { isLoggedIn, logout } = useAuth()
+const router = useRouter()
+
+const handleLogout = () => {
+  logout()
+  router.push('/login')
+}
+</script>
 
   <div class="container">
     <header class="d-flex justify-content-center py-3">
@@ -11,7 +23,12 @@
           </router-link>
         </li>
         <li class="nav-item">
-          <router-link to="/about" class="nav-link" active-class="active">
+          <router-link 
+            to="/about" 
+            class="nav-link" 
+            active-class="active"
+            v-if="isLoggedIn"
+          >
             About
           </router-link>
         </li>
@@ -20,10 +37,35 @@
             JSON Lab
           </router-link>
         </li>
+        <li class="nav-item" v-if="!isLoggedIn">
+          <router-link to="/login" class="nav-link" active-class="active">
+            Login
+          </router-link>
+        </li>
+        <li class="nav-item" v-if="isLoggedIn">
+          <button @click="handleLogout" class="nav-link btn btn-link">
+            Logout
+          </button>
+        </li>
       </ul>
     </header>
   </div>
 </template>
+
+<style scoped>
+.btn-link {
+  border: none;
+  background: none;
+  color: var(--bs-nav-link-color);
+  text-decoration: none;
+  padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+  border-radius: var(--bs-nav-pills-border-radius);
+}
+
+.btn-link:hover {
+  color: var(--bs-nav-link-hover-color);
+  background-color: var(--bs-nav-pills-link-active-bg);
+}
 
 <style scoped>
 .b-example-divider {
