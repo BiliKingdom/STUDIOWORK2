@@ -29,3 +29,5 @@ const vueApp = createApp(App)
 vueApp.use(router) 
 vueApp.use(PrimeVue, { theme: { preset: Aura } })
 
+vueApp.mount('#app')
+
