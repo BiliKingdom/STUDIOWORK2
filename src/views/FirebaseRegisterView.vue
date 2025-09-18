@@ -102,6 +102,7 @@ const register = async () => {
     console.log('User:', user)
     console.log('User email:', user.email)
     console.log('User UID:', user.uid)
+    console.log('User creation time:', user.metadata.creationTime)
     
     successMessage.value = 'Registration successful! Redirecting to sign in...'
     

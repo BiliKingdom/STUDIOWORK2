@@ -1,14 +1,7 @@
 <script setup>
 import { useAuth } from '../composables/useAuth'
-import { useRouter } from 'vue-router'
 
-const { isLoggedIn, logout } = useAuth()
-const router = useRouter()
-
-const handleLogout = () => {
-  logout()
-  router.push('/login')
-}
+const { isLoggedIn } = useAuth()
 </script>
 
 <template>
@@ -32,6 +25,16 @@ const handleLogout = () => {
             About
           </router-link>
         </li>
+        <li class="nav-item" v-if="isLoggedIn">
+          <router-link to="/add-book" class="nav-link" active-class="active">
+            Add Book
+          </router-link>
+        </li>
+        <li class="nav-item" v-if="isLoggedIn">
+          <router-link to="/manage-books" class="nav-link" active-class="active">
+            Manage Books
+          </router-link>
+        </li>
         <li class="nav-item">
           <router-link to="/json" class="nav-link" active-class="active">
             JSON Lab
@@ -48,9 +51,9 @@ const handleLogout = () => {
           </router-link>
         </li>
         <li class="nav-item" v-if="isLoggedIn">
-          <button @click="handleLogout" class="nav-link btn btn-link">
+          <router-link to="/logout" class="nav-link" active-class="active">
             Logout
-          </button>
+          </router-link>
         </li>
       </ul>
     </header>

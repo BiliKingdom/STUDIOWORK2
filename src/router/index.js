@@ -5,6 +5,9 @@ import JSONLab from '../components/JSONLab.vue'
 import LoginView from '../views/LoginView.vue'
 import AccessDeniedView from '../views/AccessDeniedView.vue'
 import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
+import AddBookView from '../views/AddBookView.vue'
+import ManageBooksView from '../views/ManageBooksView.vue'
+import LogoutView from '../views/LogoutView.vue'
 import { useAuth } from '../composables/useAuth'
 
 
@@ -39,6 +42,24 @@ const routes = [
     path: '/firebase-register',
     name: 'FirebaseRegister',
     component: FirebaseRegisterView
+  },
+  {
+    path: '/add-book',
+    name: 'AddBook',
+    component: AddBookView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/manage-books',
+    name: 'ManageBooks',
+    component: ManageBooksView,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    component: LogoutView,
+    meta: { requiresAuth: true }
   }
 ]
 

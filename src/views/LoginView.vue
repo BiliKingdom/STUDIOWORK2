@@ -95,6 +95,8 @@ const signIn = async () => {
     console.log('User:', user)
     console.log('User email:', user.email)
     console.log('User UID:', user.uid)
+    console.log('User metadata:', user.metadata)
+    console.log('Last sign in time:', user.metadata.lastSignInTime)
     
     successMessage.value = 'Login successful!'
     
