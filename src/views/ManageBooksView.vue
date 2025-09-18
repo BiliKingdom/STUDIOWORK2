@@ -219,19 +219,24 @@ const loadBooks = async () => {
 
     let q = collection(db, 'books')
     
-    // Apply genre filter using where clause
+    // Build query based on filters to avoid composite index requirements
     if (selectedGenre.value) {
-      q = query(q, where('genre', '==', selectedGenre.value))
-      console.log('Applied WHERE query - genre filter:', selectedGenre.value)
+      // If genre filter is applied, only use WHERE and LIMIT (no ORDER BY to avoid composite index)
+      q = query(
+        q, 
+        where('genre', '==', selectedGenre.value),
+        limit(parseInt(limitBooks.value))
+      )
+      console.log('Applied WHERE + LIMIT query - genre filter:', selectedGenre.value)
+    } else {
+      // If no genre filter, use ORDER BY and LIMIT
+      q = query(
+        q,
+        orderBy(sortBy.value),
+        limit(parseInt(limitBooks.value))
+      )
+      console.log('Applied ORDER BY + LIMIT query - sorting by:', sortBy.value)
     }
-    
-    // Apply ordering
-    q = query(q, orderBy(sortBy.value))
-    console.log('Applied ORDER BY query - sorting by:', sortBy.value)
-    
-    // Apply limit
-    q = query(q, limit(parseInt(limitBooks.value)))
-    console.log('Applied LIMIT query - limit to:', limitBooks.value, 'books')
     
     const querySnapshot = await getDocs(q)
     console.log('Firestore query executed successfully, found', querySnapshot.size, 'documents')
@@ -243,6 +248,18 @@ const loadBooks = async () => {
         ...doc.data()
       })
     })
+    
+    // Apply client-side sorting when genre filter is used (since we can't use ORDER BY with WHERE without composite index)
+    if (selectedGenre.value) {
+      allBooks.sort((a, b) => {
+        if (sortBy.value === 'name') return a.name.localeCompare(b.name)
+        if (sortBy.value === 'author') return a.author.localeCompare(b.author)
+        if (sortBy.value === 'publishYear') return a.publishYear - b.publishYear
+        if (sortBy.value === 'addedAt') return new Date(a.addedAt) - new Date(b.addedAt)
+        return 0
+      })
+      console.log('Applied client-side sorting by:', sortBy.value)
+    }
     
     // Apply text search filter (client-side since Firestore doesn't support full-text search)
     if (searchTerm.value) {
