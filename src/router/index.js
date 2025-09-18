@@ -4,6 +4,8 @@ import AboutView from '../views/AboutView.vue'
 import JSONLab from '../components/JSONLab.vue'
 import LoginView from '../views/LoginView.vue'
 import AccessDeniedView from '../views/AccessDeniedView.vue'
+import FirebaseSigninView from '../views/FirebaseSigninView.vue'
+import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
 import { useAuth } from '../composables/useAuth'
 
 
@@ -33,6 +35,16 @@ const routes = [
     path: '/access-denied',
     name: 'AccessDenied',
     component: AccessDeniedView
+  },
+  {
+    path: '/firebase-signin',
+    name: 'FirebaseSignin',
+    component: FirebaseSigninView
+  },
+  {
+    path: '/firebase-register',
+    name: 'FirebaseRegister',
+    component: FirebaseRegisterView
   }
 ]
 
