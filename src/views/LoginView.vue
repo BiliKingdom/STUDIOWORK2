@@ -7,16 +7,16 @@
             <h3>🔐 Library Login</h3>
           </div>
           <div class="card-body">
-            <form @submit.prevent="handleLogin">
+            <form @submit.prevent="signIn">
               <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
+                <label for="email" class="form-label">Email</label>
                 <input
-                  type="text"
+                  type="email"
                   class="form-control"
-                  id="username"
-                  v-model="credentials.username"
+                  id="email"
+                  v-model="email"
                   required
-                  placeholder="Enter your username"
+                  placeholder="Enter your email"
                 />
               </div>
               <div class="mb-3">
@@ -25,7 +25,7 @@
                   type="password"
                   class="form-control"
                   id="password"
-                  v-model="credentials.password"
+                  v-model="password"
                   required
                   placeholder="Enter your password"
                 />
@@ -33,14 +33,20 @@
               <div v-if="errorMessage" class="alert alert-danger" role="alert">
                 {{ errorMessage }}
               </div>
+              <div v-if="successMessage" class="alert alert-success" role="alert">
+                {{ successMessage }}
+              </div>
               <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary" :disabled="loading">
+                  {{ loading ? 'Signing In...' : 'Login' }}
+                </button>
               </div>
             </form>
             <div class="mt-3 text-center">
-              <small class="text-muted">
-                Demo credentials: admin / password123
-              </small>
+              <p class="text-muted">Don't have an account?</p>
+              <router-link to="/firebase-register" class="btn btn-outline-secondary">
+                Register Here
+              </router-link>
             </div>
           </div>
         </div>
@@ -51,30 +57,60 @@
 
 <script setup>
 import { ref } from 'vue'
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 import { useAuth } from '../composables/useAuth'
 
 const router = useRouter()
+const auth = getAuth()
 const { login } = useAuth()
 
-const credentials = ref({
-  username: '',
-  password: ''
+const email = ref('')
+const password = ref('')
+const errorMessage = ref('')
+const successMessage = ref('')
+const loading = ref(false)
+
+// Monitor authentication state
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log('Current user:', user)
+    console.log('User email:', user.email)
+    console.log('User UID:', user.uid)
+  } else {
+    console.log('No user is signed in')
+  }
 })
 
-const errorMessage = ref('')
-
-const handleLogin = () => {
-  // Hardcoded credentials for demo
-  const validUsername = 'admin'
-  const validPassword = 'password123'
+const signIn = async () => {
+  loading.value = true
+  errorMessage.value = ''
+  successMessage.value = ''
   
-  if (credentials.value.username === validUsername && credentials.value.password === validPassword) {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value)
+    const user = userCredential.user
+    
+    console.log('Sign in successful!')
+    console.log('User:', user)
+    console.log('User email:', user.email)
+    console.log('User UID:', user.uid)
+    
+    successMessage.value = 'Login successful!'
+    
+    // Update the auth state
     login()
-    router.push('/about')
-    errorMessage.value = ''
-  } else {
-    errorMessage.value = 'Invalid username or password. Please try again.'
+    
+    // Redirect to about page after successful sign in
+    setTimeout(() => {
+      router.push('/about')
+    }, 1500)
+    
+  } catch (error) {
+    console.error('Sign in error:', error)
+    errorMessage.value = error.message
+  } finally {
+    loading.value = false
   }
 }
 </script>

@@ -37,14 +37,14 @@ const handleLogout = () => {
             JSON Lab
           </router-link>
         </li>
-        <li class="nav-item">
-          <router-link to="/firebase-signin" class="nav-link" active-class="active">
-            Firebase Auth
-          </router-link>
-        </li>
         <li class="nav-item" v-if="!isLoggedIn">
           <router-link to="/login" class="nav-link" active-class="active">
             Login
+          </router-link>
+        </li>
+        <li class="nav-item" v-if="!isLoggedIn">
+          <router-link to="/firebase-register" class="nav-link" active-class="active">
+            Register
           </router-link>
         </li>
         <li class="nav-item" v-if="isLoggedIn">
