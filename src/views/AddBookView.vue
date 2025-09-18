@@ -119,16 +119,17 @@
         </div>
       </div>
     </div>
+    
+    <!-- BookList Component to show books with ISBN > 1000 -->
+    <BookList />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore'
-import { getAuth } from 'firebase/auth'
-
-const db = getFirestore()
-const auth = getAuth()
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import { db, auth } from '../firebase/init'
+import BookList from '../components/BookList.vue'
 
 const bookData = ref({
   isbn: '',
@@ -150,25 +151,22 @@ const addBook = async () => {
   successMessage.value = ''
   
   try {
-    const user = auth.currentUser
-    if (!user) {
-      errorMessage.value = 'You must be logged in to add books'
-      return
-    }
-
     console.log('Adding book to Firestore:', bookData.value)
-    console.log('Current user:', user.email)
+    console.log('Adding book with ISBN:', bookData.value.isbn)
+    console.log('Book name:', bookData.value.name)
     
     const docRef = await addDoc(collection(db, 'books'), {
       ...bookData.value,
-      publishYear: parseInt(bookData.value.publishYear),
-      copies: parseInt(bookData.value.copies),
-      addedBy: user.email,
+      isbn: parseInt(bookData.value.isbn),
+      publishYear: parseInt(bookData.value.publishYear) || null,
+      copies: parseInt(bookData.value.copies) || 1,
+      addedBy: auth.currentUser?.email || 'anonymous',
       addedAt: serverTimestamp(),
       available: true
     })
     
     console.log('Book added with ID:', docRef.id)
+    console.log('Book successfully added to Firestore collection "books"')
     successMessage.value = `Book "${bookData.value.name}" added successfully!`
     clearForm()
     

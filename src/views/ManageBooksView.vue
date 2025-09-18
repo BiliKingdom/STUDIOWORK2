@@ -176,7 +176,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { 
-  getFirestore, 
   collection, 
   query, 
   where, 
@@ -187,8 +186,7 @@ import {
   updateDoc,
   deleteDoc
 } from 'firebase/firestore'
-
-const db = getFirestore()
+import { db } from '../firebase/init'
 
 const books = ref([])
 const loading = ref(false)
@@ -217,25 +215,26 @@ const loadBooks = async () => {
       sortBy: sortBy.value,
       limitBooks: limitBooks.value
     })
+    console.log('Using Firestore queries: WHERE, ORDER BY, LIMIT')
 
     let q = collection(db, 'books')
     
     // Apply genre filter using where clause
     if (selectedGenre.value) {
       q = query(q, where('genre', '==', selectedGenre.value))
-      console.log('Applied genre filter:', selectedGenre.value)
+      console.log('Applied WHERE query - genre filter:', selectedGenre.value)
     }
     
     // Apply ordering
     q = query(q, orderBy(sortBy.value))
-    console.log('Applied ordering by:', sortBy.value)
+    console.log('Applied ORDER BY query - sorting by:', sortBy.value)
     
     // Apply limit
     q = query(q, limit(parseInt(limitBooks.value)))
-    console.log('Applied limit:', limitBooks.value)
+    console.log('Applied LIMIT query - limit to:', limitBooks.value, 'books')
     
     const querySnapshot = await getDocs(q)
-    console.log('Query executed, found', querySnapshot.size, 'documents')
+    console.log('Firestore query executed successfully, found', querySnapshot.size, 'documents')
     
     let allBooks = []
     querySnapshot.forEach((doc) => {
@@ -256,7 +255,8 @@ const loadBooks = async () => {
     }
     
     books.value = allBooks
-    console.log('Final books loaded:', books.value.length)
+    console.log('Final books loaded from Firestore:', books.value.length)
+    console.log('Demonstrated WHERE, ORDER BY, and LIMIT queries successfully')
     
   } catch (error) {
     console.error('Error loading books:', error)
@@ -293,7 +293,8 @@ const cancelEdit = () => {
 
 const saveEdit = async (bookId) => {
   try {
-    console.log('Saving changes for book ID:', bookId, editData.value)
+    console.log('UPDATING book in Firestore with ID:', bookId)
+    console.log('Update data:', editData.value)
     
     const bookRef = doc(db, 'books', bookId)
     await updateDoc(bookRef, {
@@ -303,7 +304,7 @@ const saveEdit = async (bookId) => {
       copies: parseInt(editData.value.copies)
     })
     
-    console.log('Book updated successfully')
+    console.log('Book UPDATED successfully in Firestore')
     successMessage.value = 'Book updated successfully!'
     editingBook.value = null
     editData.value = {}
@@ -327,11 +328,12 @@ const deleteBook = async (bookId, bookName) => {
   }
   
   try {
-    console.log('Deleting book ID:', bookId)
+    console.log('DELETING book from Firestore with ID:', bookId)
+    console.log('Book name being deleted:', bookName)
     
     await deleteDoc(doc(db, 'books', bookId))
     
-    console.log('Book deleted successfully')
+    console.log('Book DELETED successfully from Firestore')
     successMessage.value = `Book "${bookName}" deleted successfully!`
     
     // Reload books to show updated list

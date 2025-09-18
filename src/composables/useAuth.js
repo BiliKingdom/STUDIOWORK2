@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
-import { getAuth, signOut } from 'firebase/auth'
+import { signOut } from 'firebase/auth'
+import { auth } from '../firebase/init'
 
 // Global authentication state
 const isAuthenticated = ref(false)
@@ -10,7 +11,6 @@ export function useAuth() {
   }
 
   const logout = async () => {
-    const auth = getAuth()
     try {
       await signOut(auth)
       console.log('User signed out successfully')

@@ -39,11 +39,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import { onAuthStateChanged } from 'firebase/auth'
 import { useAuth } from '../composables/useAuth'
 import { useRouter } from 'vue-router'
+import { auth } from '../firebase/init'
 
-const auth = getAuth()
 const { logout } = useAuth()
 const router = useRouter()
 
