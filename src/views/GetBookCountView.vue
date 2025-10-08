@@ -35,12 +35,15 @@
 
 <script setup>
 import { ref } from 'vue'
-import { collection, getCountFromServer } from 'firebase/firestore'
-import { db } from '../firebase/init'
 
 const count = ref(null)
 const error = ref('')
 const loading = ref(false)
+
+// TODO: Replace this URL with your deployed Firebase Cloud Function URL
+// After deploying, get the URL from Firebase Console -> Functions -> getBookCount
+// The URL will look like: https://REGION-PROJECT_ID.cloudfunctions.net/getBookCount
+const CLOUD_FUNCTION_URL = 'https://australia-southeast1-studio-d0f21.cloudfunctions.net/getBookCount'
 
 const getBookCount = async () => {
   loading.value = true
@@ -48,13 +51,22 @@ const getBookCount = async () => {
   count.value = null
 
   try {
-    console.log('Fetching book count from Firestore...')
+    console.log('Fetching book count from Cloud Function...')
 
-    const booksCollection = collection(db, 'books')
-    const snapshot = await getCountFromServer(booksCollection)
+    const response = await fetch(CLOUD_FUNCTION_URL)
 
-    count.value = snapshot.data().count
-    console.log('Book count retrieved successfully:', count.value)
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const data = await response.json()
+
+    if (data.success) {
+      count.value = data.count
+      console.log('Book count retrieved successfully:', count.value)
+    } else {
+      throw new Error(data.message || 'Failed to get book count')
+    }
 
   } catch (err) {
     console.error('Error getting book count:', err)
