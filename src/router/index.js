@@ -8,8 +8,8 @@ import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
 import AddBookView from '../views/AddBookView.vue'
 import ManageBooksView from '../views/ManageBooksView.vue'
 import LogoutView from '../views/LogoutView.vue'
+import GetBookCountView from '../views/GetBookCountView.vue'
 import { useAuth } from '../composables/useAuth'
-import GetBookCountView from '@/views/GetBookCountView.vue'
 
 
 const routes = [
@@ -30,7 +30,7 @@ const routes = [
     component: JSONLab
   },  
   {
-    path: '/GetBookCount',
+    path: '/get-book-count',
     name: 'GetBookCount',
     component: GetBookCountView
   },
