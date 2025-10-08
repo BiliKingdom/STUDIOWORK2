@@ -9,6 +9,7 @@ import AddBookView from '../views/AddBookView.vue'
 import ManageBooksView from '../views/ManageBooksView.vue'
 import LogoutView from '../views/LogoutView.vue'
 import { useAuth } from '../composables/useAuth'
+import GetBookCountView from '@/views/GetBookCountView.vue'
 
 
 const routes = [
@@ -27,6 +28,11 @@ const routes = [
     path: '/json',
     name: 'JSONLab',
     component: JSONLab
+  },  
+  {
+    path: '/GetBookCount',
+    name: 'GetBookCount',
+    component: GetBookCountView
   },
   {
     path: '/login',

@@ -25,9 +25,16 @@ const { isLoggedIn } = useAuth()
             About
           </router-link>
         </li>
+        
         <li class="nav-item" v-if="isLoggedIn">
           <router-link to="/add-book" class="nav-link" active-class="active">
             Add Book
+          </router-link>
+        </li>
+
+        <li class="nav-item" v-if="isLoggedIn">
+          <router-link to="/GetBookCount" class="nav-link" active-class="active">
+            GetBookCount
           </router-link>
         </li>
         <li class="nav-item" v-if="isLoggedIn">
