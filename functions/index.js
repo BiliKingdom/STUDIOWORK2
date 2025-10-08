@@ -10,6 +10,11 @@
 const {setGlobalOptions} = require("firebase-functions");
 const {onRequest} = require("firebase-functions/https");
 const logger = require("firebase-functions/logger");
+const admin = require("firebase-admin");
+const cors = require("cors")({origin: true});
+
+// Initialize Firebase Admin
+admin.initializeApp();
 
 // For cost control, you can set the maximum number of containers that can be
 // running at the same time. This helps mitigate the impact of unexpected
@@ -30,3 +35,42 @@ setGlobalOptions({ maxInstances: 10 });
 //   logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
 // });
+
+// Cloud Function to count books in Firestore
+exports.getBookCount = onRequest((req, res) => {
+  return cors(req, res, async () => {
+    try {
+      logger.info("Starting getBookCount function");
+      
+      // Get reference to Firestore
+      const db = admin.firestore();
+      
+      // Get the books collection
+      const booksCollection = db.collection("books");
+      
+      // Get all documents in the collection
+      const snapshot = await booksCollection.get();
+      
+      // Count the documents
+      const count = snapshot.size;
+      
+      logger.info(`Found ${count} books in Firestore`);
+      
+      // Return the count
+      res.status(200).json({
+        success: true,
+        count: count,
+        message: `Successfully counted ${count} books`
+      });
+      
+    } catch (error) {
+      logger.error("Error counting books:", error);
+      
+      res.status(500).json({
+        success: false,
+        error: error.message,
+        message: "Failed to count books"
+      });
+    }
+  });
+});
