@@ -35,7 +35,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import axios from 'axios'
+import { collection, getCountFromServer } from 'firebase/firestore'
+import { db } from '../firebase/init'
 
 const count = ref(null)
 const error = ref('')
@@ -45,26 +46,16 @@ const getBookCount = async () => {
   loading.value = true
   error.value = ''
   count.value = null
-  
+
   try {
-    console.log('Making HTTP request to Cloud Function...')
-    
-    // Cloud Function URL - will be configured in section 9.4
-    const cloudFunctionUrl = 'https://australia-southeast1-studio-d0f21.cloudfunctions.net/getBookCount'
-    
-    console.log('Requesting URL:', cloudFunctionUrl)
-    
-    const response = await axios.get(cloudFunctionUrl)
-    
-    console.log('Cloud Function response:', response.data)
-    
-    if (response.data && typeof response.data.count === 'number') {
-      count.value = response.data.count
-      console.log('Book count retrieved successfully:', count.value)
-    } else {
-      throw new Error('Invalid response format from Cloud Function')
-    }
-    
+    console.log('Fetching book count from Firestore...')
+
+    const booksCollection = collection(db, 'books')
+    const snapshot = await getCountFromServer(booksCollection)
+
+    count.value = snapshot.data().count
+    console.log('Book count retrieved successfully:', count.value)
+
   } catch (err) {
     console.error('Error getting book count:', err)
     error.value = err.message || 'Failed to get book count'
