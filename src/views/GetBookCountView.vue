@@ -50,7 +50,7 @@ const getBookCount = async () => {
     console.log('Making HTTP request to Cloud Function...')
     
     // Cloud Function URL - will be configured in section 9.4
-    const cloudFunctionUrl = 'https://us-central1-studio-d0f21.cloudfunctions.net/getBookCount'
+    const cloudFunctionUrl = 'https://australia-southeast1-studio-d0f21.cloudfunctions.net/getBookCount'
     
     console.log('Requesting URL:', cloudFunctionUrl)
     
