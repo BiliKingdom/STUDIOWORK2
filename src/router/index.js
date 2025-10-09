@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LibraryRegistrationForm from '../components/LibraryRegistrationForm.vue' 
+import LibraryRegistrationForm from '../components/LibraryRegistrationForm.vue'
 import AboutView from '../views/AboutView.vue'
 import JSONLab from '../components/JSONLab.vue'
 import LoginView from '../views/LoginView.vue'
@@ -9,6 +9,8 @@ import AddBookView from '../views/AddBookView.vue'
 import ManageBooksView from '../views/ManageBooksView.vue'
 import LogoutView from '../views/LogoutView.vue'
 import GetBookCountView from '../views/GetBookCountView.vue'
+import WeatherView from '../views/WeatherView.vue'
+import GetAllBookAPIView from '../views/GetAllBookAPIView.vue'
 import { useAuth } from '../composables/useAuth'
 
 
@@ -33,6 +35,16 @@ const routes = [
     path: '/get-book-count',
     name: 'GetBookCount',
     component: GetBookCountView
+  },
+  {
+    path: '/WeatherCheck',
+    name: 'GetWeather',
+    component: WeatherView
+  },
+  {
+    path: '/GetAllBookAPI',
+    name: 'GetAllBookAPI',
+    component: GetAllBookAPIView
   },
   {
     path: '/login',
