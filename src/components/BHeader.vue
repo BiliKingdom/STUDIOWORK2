@@ -48,6 +48,11 @@ const { isLoggedIn } = useAuth()
           </router-link>
         </li>
         <li class="nav-item">
+          <router-link to="/CountBookAPI" class="nav-link" active-class="active">
+            Count Book API
+          </router-link>
+        </li>
+        <li class="nav-item">
           <router-link to="/json" class="nav-link" active-class="active">
             JSON Lab
           </router-link>
